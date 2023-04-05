@@ -3,6 +3,8 @@ import { addToDb, deleteShoppingCart, getShoppingCart } from '../../../utilities
 import Cart from '../Cart/Cart';
 import Product from '../Product/Product';
 import './Shop.css'
+import { Link } from 'react-router-dom';
+import { ArrowRightIcon } from '@heroicons/react/24/solid'
 
 const Shop = () => {
     const [products, setProducts] = useState([]);
@@ -61,7 +63,14 @@ const Shop = () => {
                 <Cart
                     cart={cart}
                     handleClearCart={handleClearCart}
-                ></Cart>
+                >
+                    <Link to="/orders">
+                        <button className='mt-10 flex w-[232px] h-[48px] bg-[#FF9900]  text-white pl-14'>
+                            Review Order
+                            <ArrowRightIcon className="h-5 w-5 mt-1 " />
+                        </button>
+                    </Link>
+                </Cart>
             </div>
         </div>
     );
