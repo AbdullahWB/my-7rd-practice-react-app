@@ -1,9 +1,14 @@
-import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../Provider/AuthProvider';
 
 const Login = () => {
     const { singIn } = useContext(AuthContext)
+    const navigate = useNavigate()
+    const location = useLocation()
+    const [show, setShow] = useState(false)
+    console.log(location);
+    const from = location.state?.from?.pathname || "/";
 
     const handleLogin = event => {
         event.preventDefault();
@@ -18,6 +23,8 @@ const Login = () => {
             .then(result => {
                 const loggedUser = result.user
                 console.log(loggedUser)
+                form.reset()
+                navigate(from , {replace: true})
             })
             .catch(error => {
                 console.log(error);
@@ -39,10 +46,17 @@ const Login = () => {
                             <label className="label">
                                 <span className="label-text">Password</span>
                             </label>
-                            <input type="password" name='password' required placeholder="password" className="input input-bordered" />
+                            <input type={show ? "text" : "password"} name='password' required placeholder="password" className="input input-bordered" />
+                            <div className='flex'>
+                            <p onClick={() => setShow(!show)}><small>
+                                {
+                                    show ? <span>Hide password</span> : <span>Show password</span>
+                            }
+                            </small></p>
                             <label className="label">
-                                <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
+                                <a href="#" className="label-text-alt link link-hover text-primary">Forgot password?</a>
                             </label>
+                            </div>
                         </div>
                         <div className="form-control mt-6">
                             <button className="btn btn-primary">Login</button>
