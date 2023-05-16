@@ -36,18 +36,29 @@ const Shop = () => {
 
     useEffect(() => {
         const storedCart = getShoppingCart()
-        const saveCart = []
-        for (const id in storedCart) {
-            const addedProduct = products.find(product => product._id === id);
-            if (addedProduct) {
-                const quantity = storedCart[id]
-                addedProduct.quantity = quantity
-                saveCart.push(addedProduct)
-            }
-            console.log(addedProduct)
-        }
-        setCart(saveCart)
-    }, [products])
+        const ids = Object.keys(storedCart);
+        fetch('http://localhost:3000/productByIds', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+            },
+            body: JSON.stringify(ids)
+        })
+            .then(res => res.json())
+            .then(cartProducts => {
+                const saveCart = []
+                for (const id in storedCart) {
+                    const addedProduct = cartProducts.find(product => product._id === id);
+                    if (addedProduct) {
+                        const quantity = storedCart[id]
+                        addedProduct.quantity = quantity
+                        saveCart.push(addedProduct)
+                    }
+                    console.log(addedProduct)
+                }
+                setCart(saveCart)
+            })
+    }, [])
     const handleAddToCart = (product) => {
         // console.log('product added to cart', product)
         // const newCart = [...cart, product]
@@ -110,7 +121,7 @@ const Shop = () => {
                             }
                             onClick={() => setCurrentPage(number)}
                         >
-                            {number}
+                            {number + 1}
                         </button>)
                     }
                 </div>

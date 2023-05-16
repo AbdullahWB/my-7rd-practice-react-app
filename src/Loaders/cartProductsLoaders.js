@@ -1,10 +1,18 @@
 import { getShoppingCart } from "../../utilities/fakedb";
 
 const cartProductLoader = async () => {
-    const loadedProducts = await fetch('http://localhost:3000/product');
+    const storedCart = getShoppingCart();
+    const ids = Object.keys(storedCart);
+    console.log(ids);
+    const loadedProducts = await fetch('http://localhost:3000/productByIds', {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json',
+        },
+        body: JSON.stringify(ids)
+    });
     const products = await loadedProducts.json();
     // console.log(products);
-    const storedCart = getShoppingCart();
     const savedCart = [];
     for (const id in storedCart) {
         const addedProduct = products.find(pd => pd._id === id);
